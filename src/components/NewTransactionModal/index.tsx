@@ -31,7 +31,7 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
       title,
       category,
       amount,
-      type
+      type,      
     });
 
     setTitle('');
