@@ -6,12 +6,27 @@ import incomeImage from '../../assets/income.svg';
 import outcomeImage from '../../assets/outcome.svg';
 import totalImage from '../../assets/total.svg';
 import { Container } from "./styles";
+import { formatToReal } from '../../helpers/formatToReal';
 
 export function Summary() {
 
-  const transactions = useContext(TransactionsContext);
+  const { transactions } = useContext(TransactionsContext);
 
-  console.log(transactions)
+  const { deposits, total, withdraws} = transactions.reduce((acc, transaction) => {
+    if (transaction.type === 'deposit') {
+      acc.deposits += transaction.amount;
+      acc.total += transaction.amount;
+    } else {
+      acc.withdraws += transaction.amount;
+      acc.total -= transaction.amount;
+    }
+
+    return acc
+  }, {
+    deposits: 0,
+    withdraws: 0,
+    total: 0
+  })
 
   return (
     <Container>
@@ -20,21 +35,21 @@ export function Summary() {
           <p>Entradas</p>
           <img src={incomeImage} alt="Entradas" />
         </header>
-        <strong>R$1000,00</strong>
+        <strong>{formatToReal(deposits)}</strong>
       </div>
       <div>
         <header>
           <p>Saidas</p>
           <img src={outcomeImage} alt="Saídas" />
         </header>
-        <strong>- R$100,00</strong>
+        <strong>- {formatToReal(withdraws)}</strong>
       </div>
       <div className="highlight-background">
         <header>
           <p>Total</p>
           <img src={totalImage} alt="Total" />
         </header>
-        <strong>R$900,00</strong>
+        <strong>{formatToReal(total)}</strong>
       </div>
     </Container>
   )
